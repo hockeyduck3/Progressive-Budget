@@ -19,3 +19,26 @@ index.onsuccess = event => {
 index.onerror = event => {
     console.log(`There was an error: ${event.target.errorCode}`)
 }
+
+function runCheck() {
+    const transaction = db.transaction(['pending'], 'readwrite');
+
+    const store = transaction.objectStore('pending');
+
+    const getAll = store.getAll();
+
+    getAll.onsuccess = function() {
+        // This if statement will check and make sure that there is actually something within indexedDB
+        if (getAll.result.length > 0) {
+            fetch('/api/transaction/bulk', {
+                method: 'POST',
+                body: JSON.stringify(getAll.result),
+                headers: {
+                    Accept: 'aplication/json, text/plain, */*', 'Content-Type': 'application/json'
+                }
+            }).then(res => res.json()).then(() => {
+                store.clear();
+            })
+        }
+    }
+}
