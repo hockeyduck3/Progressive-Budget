@@ -1,4 +1,5 @@
 body {
+  background-color: rgb(250, 245, 239);
   font-size: 120%;
   font-family: Arial;
 }
@@ -34,18 +35,52 @@ tr:nth-child(even) {
 
 .total {
   font-size: 150%;
-  text-decoration: underline;
+  font-weight: bold;
 }
 
-.form {
+.form, .formBtns {
   margin-top: 25px;
   width: 100%;
 }
 
+#add-btn, #sub-btn {
+  background-color: blueviolet;
+  border: 1px black solid;
+  border-radius: 0.5rem;
+  color: white;
+  height: 30px;
+  width: 29%;
+}
+
+#add-btn, #t-name {
+  margin-right: 10px;
+}
+
+#add-btn:hover, #sub-btn:hover {
+  transform: scale(1.03);
+}
+
+#add-btn:focus, #sub-btn:focus {
+  outline: none;
+}
+
+#t-name, #t-amount {
+  border: 1px black solid;
+  border-radius: 0.5rem;
+  height: 30px;
+}
+
+#t-name:focus, #t-amount:focus {
+  outline: none;
+}
+
 .transactions {
+  border: 2px black solid;
+  border-radius: 0.5rem;
+  box-shadow: 1px 3px 3px 0px black;
   text-align: left;
   max-height: 300px;
   overflow: auto;
   width: 90%;
-  margin: 0 auto;
+  margin: 10px auto;
 }
