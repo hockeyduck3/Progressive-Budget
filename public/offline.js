@@ -1,5 +1,8 @@
 let db;
 
+// Once the user comes back online run a DB check to see if anything was saved offline
+window.addEventListener('online', runCheck);
+
 const index = indexedDB.open('budget', 1);
 
 index.onupgradeneeded = event => {
@@ -27,7 +30,7 @@ function runCheck() {
 
     const getAll = store.getAll();
 
-    getAll.onsuccess = function() {
+    getAll.onsuccess = () => {
         // This if statement will check and make sure that there is actually something within indexedDB
         if (getAll.result.length > 0) {
             fetch('/api/transaction/bulk', {
@@ -37,8 +40,20 @@ function runCheck() {
                     Accept: 'aplication/json, text/plain, */*', 'Content-Type': 'application/json'
                 }
             }).then(res => res.json()).then(() => {
+                const transaction = db.transaction(['pending'], 'readwrite');
+
+                const store = transaction.objectStore('pending');
+                
                 store.clear();
-            })
+            });
         }
     }
+}
+
+function saveRecord(data) {
+    const transaction = db.transaction(['pending'], 'readwrite');
+
+    const store = transaction.objectStore('pending');
+
+    store.add(data);
 }
