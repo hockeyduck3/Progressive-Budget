@@ -71,7 +71,7 @@ function populateChart() {
         datasets: [{
             label: "Total Over Time",
             fill: true,
-            backgroundColor: "#6666ff",
+            backgroundColor: "#8a2be2",
             data
         }]
     }
@@ -86,6 +86,11 @@ function sendTransaction(isAdding) {
   // validate form
   if (nameEl.value === "" || amountEl.value === "") {
     errorEl.textContent = "Missing Information";
+
+    setTimeout(() => {
+      errorEl.textContent = "";
+    }, 4000);
+
     return;
   }
   else {
