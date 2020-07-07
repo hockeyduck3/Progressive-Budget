@@ -16,5 +16,5 @@ npm i
 
 ## Questions
 
-If you have any questions, please open an issue or contact [hockeyduck3](https://github.com/hockeyduck3).
+If you have any questions, please open an issue or contact [LJ Spencer](https://github.com/hockeyduck3).
 
