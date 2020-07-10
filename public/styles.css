@@ -44,7 +44,7 @@ tr:nth-child(even) {
 }
 
 #add-btn, #sub-btn {
-  background-color: blueviolet;
+  background-color: rgb(138, 43, 226);
   border: 1px black solid;
   border-radius: 0.5rem;
   color: white;
