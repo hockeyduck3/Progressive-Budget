@@ -1,4 +1,13 @@
-const FILES_TO_CACHE = ['/', '/index.html', '/styles.css'];
+const FILES_TO_CACHE = [
+    '/', 
+    '/index.html', 
+    '/index.js', 
+    '/styles.css', 
+    '/offline.js', 
+    '/manifest.webmanifest',
+    '/icons/icon-192x192.png',
+    '/icons/icon-512x512.png'
+];
 
 const PRECACHE = 'precache-v1';
 const RUNTIME = 'runtime';
@@ -10,8 +19,6 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('active', event => {
-    const mainCache = [PRECACHE, RUNTIME];
-
     event.waitUntil(caches.keys().then(mainCachesNames => {
         return mainCachesNames.filter(cachedName => !mainCachesNames.includes(cachedName));
     }).then(deleteCaches => {
@@ -29,12 +36,10 @@ self.addEventListener('fetch', data => {
             caches.match(data.request).then(res => {
                 if (res) return res;
 
-                return caches.open(RUNTIME).then(cache => {
+                return caches.open(RUNTIME).then(() => {
                     return fetch(data.request).then(response => {
-                        return cache.put(data.request, response.clone()).then(() => {
-                            return response;
-                        });
-                    })
+                        return response;
+                    });
                 });
             })
         )
