@@ -18,29 +18,34 @@ self.addEventListener('install', event => {
     ).then(self.skipWaiting()));
 });
 
-self.addEventListener('active', event => {
-    event.waitUntil(caches.keys().then(mainCachesNames => {
-        return mainCachesNames.filter(cachedName => !mainCachesNames.includes(cachedName));
+self.addEventListener('activate', event => {
+    const mainCachesNames = [PRECACHE, RUNTIME]
+
+    event.waitUntil(caches.keys().then(cacheNames => {
+        return cacheNames.filter(cachedName => !mainCachesNames.includes(cachedName));
     }).then(deleteCaches => {
         return Promise.all(deleteCaches.map(deleteThisCache => {
             return caches.delete(deleteThisCache);
         }));
     }).then(() => {
-        self.ClientRectList.claim()
+        return self.clients.claim();
     }));
 });
 
 self.addEventListener('fetch', data => {
-    if (data.request.url.startsWith(self.location.origin)) {
+    if (data.request.url.includes('/api/')) {
         data.respondWith(
-            caches.match(data.request).then(res => {
-                if (res) return res;
-
-                return caches.open(RUNTIME).then(() => {
-                    return fetch(data.request).then(response => {
-                        return response;
-                    });
-                });
+            caches.open(RUNTIME).then(cache => {
+                return fetch(data.request).then(response => {
+                    if (response.status === 200) {
+                        cache.put(data.request, response.clone())
+                    }
+                    return response;
+                }).catch(err => {
+                    return cache.match(data.request);
+                })
+            }).catch(err => {
+                console.log(err);
             })
         )
     }
